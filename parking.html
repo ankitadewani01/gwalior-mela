@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Near Gwalior Vyapar Mela</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f7f7f7 0%, #e0f7fa 100%);
+        }
+        .parking-hero {
+            background: linear-gradient(90deg, #b2dfdb 0%, #80cbc4 100%);
+            padding: 60px 0 40px 0;
+            text-align: center;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.07);
+        }
+        .parking-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #00695c;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+        .parking-hero p {
+            font-size: 1.22rem;
+            color: #333;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .parking-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 36px;
+            justify-content: center;
+            margin: 40px 0 60px 0;
+        }
+        .parking-card {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffe0b2 100%);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
+            width: 390px;
+            transition: box-shadow 0.22s, transform 0.22s;
+            display: flex;
+            flex-direction: column;
+            padding: 44px 36px 36px 36px;
+            margin-bottom: 10px;
+            border: 2.5px solid #ffd180;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .parking-card:hover {
+            box-shadow: 0 16px 48px rgba(44,62,80,0.18);
+            transform: translateY(-10px) scale(1.045);
+        }
+        .parking-title {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: #d35400;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .parking-title i {
+            color: #d35400;
+            font-size: 1.5em;
+        }
+        .parking-address {
+            font-size: 1.18rem;
+            color: #333;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+        .parking-desc {
+            font-size: 1.18rem;
+            color: #444;
+            margin-bottom: 18px;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        .parking-card::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 211, 140, 0.18);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .parking-map {
+            margin-top: 10px;
+        }
+        @media (max-width: 900px) {
+            .parking-list { gap: 18px; }
+            .parking-card { width: 95vw; max-width: 420px; }
+        }
+    </style>
+</head>
+    <body id="home">
+    <header id="header">
+        <nav id="main-nav" class="navbar navbar-default navbar-fixed-top" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><img src="https://gwaliorkamela.com/assets/main/images/newbannereeee.x33259.png" alt="logo" style="height: 65px; width: 450px; margin-left: 0px;"></a>
+                </div>
+                <div class="collapse navbar-collapse navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li class="scroll"><a href="index.html#home">Home</a></li>  
+                        <li class="scroll"><a href="index.html#services">Sectors</a></li>
+                        <li class="scroll"><a href="index.html#about">About</a></li> 
+                        <li class="scroll"><a href="index.html#our-team">Officers</a></li>
+                        <li class="scroll"><a href="index.html#portfolio">Gallery</a></li>
+                        <li class="scroll"><a href="index.html#pricing">Emergency</a></li>
+                        <li class="scroll"><a href="index.html#contact-us">Contact</a></li>                        
+                    </ul>
+                </div>
+            </div><!--/.container-->
+        </nav><!--/nav-->
+    </header><!--/header-->
+    <main>
+        <div class="container">
+            <div style="width:100%; max-width:900px; margin:0 auto 40px auto;">
+                <div id="map" style="width:100%; height:420px; border-radius:16px; box-shadow:0 4px 18px rgba(0,105,92,0.10);"></div>
+            </div>
+            <div class="parking-list">
+                <div class="parking-card" id="parking-main-mela">
+                    <div class="parking-title">Main Mela Ground Parking</div>
+                    <div class="parking-address">Mela Road, Near Main Entrance, Gwalior, MP</div>
+                    <div class="parking-desc">Located right at the main entrance, this is the most convenient parking for visitors. It is spacious, well-lit, and monitored by security staff 24/7. Easy access to the main fairground and all major attractions.</div>
+                </div>
+                <div class="parking-card" id="parking-race-course">
+                    <div class="parking-title">Race Course Parking</div>
+                    <div class="parking-address">Race Course Road, Gwalior, MP</div>
+                    <div class="parking-desc">Ideal for those coming from the city center or railway station. This lot offers ample space, smooth entry/exit, and is a short walk from the mela. Shuttle service available during peak hours.</div>
+                </div>
+                <div class="parking-card" id="parking-padav">
+                    <div class="parking-title">Padav Parking</div>
+                    <div class="parking-address">Padav Area, Near Railway Station, Gwalior, MP</div>
+                    <div class="parking-desc">Perfect for visitors arriving by train. Padav Parking is safe, affordable, and has clear signage to guide you to the mela entrance. Staff assistance is available for luggage and directions.</div>
+                </div>
+                <div class="parking-card" id="parking-phoolbagh">
+                    <div class="parking-title">Phoolbagh Parking</div>
+                    <div class="parking-address">Phoolbagh, Near Bus Stand, Gwalior, MP</div>
+                    <div class="parking-desc">Located near the main bus stand, this lot is best for those using public transport. It features covered parking, CCTV surveillance, and a help desk for visitor support.</div>
+                </div>
+                <div class="parking-card" id="parking-dd-nagar">
+                    <div class="parking-title">DD Nagar Parking</div>
+                    <div class="parking-address">DD Nagar, Near Mela Extension, Gwalior, MP</div>
+                    <div class="parking-desc">A great option for those coming from the northern side of Gwalior. DD Nagar Parking is newly constructed, offers wide lanes, and is close to the mela’s extension area. Wheelchair accessible.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+            <footer id="footer">
+                    <div class="container">
+                            <div class="row">
+                                    <div class="col-sm-6">
+                                            &copy; 2025 Government of Madhya Pradesh <a target="_blank" href="http://webthemez.com/" title="Free Bootstrap Themes and HTML Templates">WebThemez.com</a>
+                                    </div>
+                                    <div class="col-sm-6">
+                                            <ul class="social-icons">
+                                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li> 
+                                                    <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+                                                    <li><a href="#"><i class="fa fa-github"></i></a></li>
+                                            </ul>
+                                    </div>
+                            </div>
+                    </div>
+            </footer><!--/#footer-->
+
+            <script src="js/jquery.js"></script>
+            <script src="js/bootstrap.min.js"></script> 
+            <!-- Google Maps JS API (replace YOUR_API_KEY with a real key for production) -->
+            <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
+            <script>
+                // Parking locations: [title, lat, lng, anchorId, address]
+                var parkingLocations = [
+                    ["Main Mela Ground Parking", 26.2205, 78.1828, "parking-main-mela", "Mela Road, Near Main Entrance, Gwalior, MP"],
+                    ["Race Course Parking", 26.2187, 78.1865, "parking-race-course", "Race Course Road, Gwalior, MP"],
+                    ["Padav Parking", 26.2252, 78.1801, "parking-padav", "Padav Area, Near Railway Station, Gwalior, MP"],
+                    ["Phoolbagh Parking", 26.2180, 78.1785, "parking-phoolbagh", "Phoolbagh, Near Bus Stand, Gwalior, MP"],
+                    ["DD Nagar Parking", 26.2330, 78.2040, "parking-dd-nagar", "DD Nagar, Near Mela Extension, Gwalior, MP"]
+                ];
+                function initMap() {
+                    var center = {lat: 26.2205, lng: 78.1828};
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 13,
+                        center: center,
+                        mapTypeId: 'roadmap'
+                    });
+                    parkingLocations.forEach(function(loc) {
+                        var marker = new google.maps.Marker({
+                            position: {lat: loc[1], lng: loc[2]},
+                            map: map,
+                            title: loc[0],
+                            icon: {
+                                url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                            }
+                        });
+                        var directionsUrl = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(loc[1] + "," + loc[2]);
+                        var infoContent =
+                            '<div style="font-size:1.1rem; font-weight:600; color:#00695c;">' + loc[0] + '</div>' +
+                            '<div style="font-size:0.98rem; color:#333; margin-bottom:8px;">' + loc[4] + '</div>' +
+                            '<a href="#' + loc[3] + '" style="color:#00796b; text-decoration:underline; font-weight:500;">View Details</a><br>' +
+                            '<a href="' + directionsUrl + '" target="_blank" style="color:#d35400; text-decoration:underline; font-weight:500;">Get Directions</a>';
+                        var infowindow = new google.maps.InfoWindow({
+                            content: infoContent
+                        });
+                        marker.addListener('click', function() {
+                            infowindow.open(map, marker);
+                        });
+                    });
+                }
+            </script>
+</body>
+</html>

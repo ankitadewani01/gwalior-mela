@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Child Help & Missing Report</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+      background: #d35400;
+      border: none;
+    }
+
+    .navbar-brand, .nav > li > a {
+      color: #fff !important;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .navbar-brand:hover, .nav > li > a:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff !important;
+    }
+
+    .main-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 30px;
+      justify-content: center;
+    }
+
+    .left-panel, .right-panel {
+      background: #fff8f0;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(44,62,80,0.12);
+      padding: 28px;
+      flex: 1;
+      min-width: 380px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #d35400;
+      font-weight: 800;
+      margin-bottom: 30px;
+    }
+
+    h3 {
+      color: #d35400;
+      margin-top: 20px;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #d35400;
+    }
+
+    .form-control, textarea {
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #ffb347, #ffcc80);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 10px 25px;
+      transition: 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #d35400;
+      color: #fff;
+    }
+
+    .contact-info {
+      background: #ffe0b2;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(211,84,0,0.08);
+    }
+
+    #missingChildrenList {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .child-card {
+      background: #fff3e0;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .child-info {
+      flex: 1;
+    }
+
+    .child-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 2px solid #d35400;
+    }
+
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+
+    footer {
+      background: #d35400;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      font-weight: 500;
+      margin-top: 40px;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 900px) {
+      .main-container {
+        flex-direction: column;
+        padding: 20px;
+      }
+      .child-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="../index.html">Gwalior Vyapar Mela</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../events.html">Events</a></li>
+        <li><a href="../parking.html">Parking</a></li>
+        <li><a href="../complaints.html">Complaints</a></li>
+        <li class="active"><a href="#">Child Help</a></li>
+        <li><a href="../contact-us.html">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <!-- Left Side -->
+    <div class="left-panel">
+      <h2>Child Help & Missing Report</h2>
+
+      <div class="section contact-info">
+        <h3>Emergency Contact</h3>
+        <ul style="list-style:none; padding-left:0;">
+          <li><b>Child Helpline:</b> 1098 (24x7)</li>
+          <li><b>Local Police:</b> 100</li>
+          <li><b>Control Room:</b> +91-9876543210</li>
+          <li><b>Email:</b> childhelp@gwaliormela.com</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3>Prevention Tips</h3>
+        <ul>
+          <li>Keep children under supervision in crowds.</li>
+          <li>Teach children to find security if lost.</li>
+          <li>Note your child’s clothing before visiting.</li>
+          <li>Ensure your child knows your contact number.</li>
+          <li>Use ID bands for small children.</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3>Report a Missing Child</h3>
+        <form id="missingChildForm">
+          <label>Child's Name:</label>
+          <input type="text" class="form-control" id="childName" required>
+
+          <label>Age:</label>
+          <input type="number" class="form-control" id="age" required>
+
+          <label>Gender:</label>
+          <select class="form-control" id="gender" required>
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+
+          <label>Last Seen Location:</label>
+          <input type="text" class="form-control" id="lastSeen" required>
+
+          <label>Last Seen Date & Time:</label>
+          <input type="datetime-local" class="form-control" id="lastSeenTime" required>
+
+          <label>Description (Clothes, Height, etc.):</label>
+          <textarea class="form-control" id="description" rows="3" required></textarea>
+
+          <label>Parent/Guardian Name:</label>
+          <input type="text" class="form-control" id="parentName" required>
+
+          <label>Parent/Guardian Contact:</label>
+          <input type="text" class="form-control" id="parentContact" required>
+
+          <label>Upload Child Image:</label>
+          <input type="file" class="form-control" id="childImage" accept="image/*" required>
+
+          <button type="submit" class="btn btn-primary">Submit Report</button>
+        </form>
+
+        <div id="reportStatus" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="right-panel">
+      <h2>Missing Children</h2>
+      <div id="missingChildrenList">
+        <p>No reports yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Gwalior Vyapar Mela. All rights reserved.
+  </footer>
+
+  <script>
+    function getReports() {
+      return JSON.parse(localStorage.getItem('missingChildrenReports') || '[]');
+    }
+
+    function saveReports(reports) {
+      localStorage.setItem('missingChildrenReports', JSON.stringify(reports));
+    }
+
+    function saveReport(report) {
+      let reports = getReports();
+      reports.push(report);
+      saveReports(reports);
+    }
+
+    function deleteReport(index) {
+      let reports = getReports();
+      reports.splice(index, 1);
+      saveReports(reports);
+      renderReports();
+    }
+
+    function renderReports() {
+      const reports = getReports();
+      const list = document.getElementById('missingChildrenList');
+      if (reports.length === 0) {
+        list.innerHTML = "<p>No reports yet.</p>";
+        return;
+      }
+
+      list.innerHTML = reports.map((r, i) => `
+        <div class="child-card">
+          <img src="${r.image}" alt="Child Image">
+          <div class="child-info">
+            <b>Name:</b> ${r.childName}<br>
+            <b>Age:</b> ${r.age}<br>
+            <b>Gender:</b> ${r.gender}<br>
+            <b>Last Seen:</b> ${r.lastSeen}<br>
+            <b>Time:</b> ${r.lastSeenTime}<br>
+            <b>Description:</b> ${r.description}<br>
+            <b>Parent:</b> ${r.parentName} (${r.parentContact})
+          </div>
+          <button class="delete-btn" onclick="deleteReport(${i})">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('missingChildForm').onsubmit = function (e) {
+      e.preventDefault();
+
+      const file = document.getElementById('childImage').files[0];
+      const reader = new FileReader();
+
+      reader.onloadend = function () {
+        const report = {
+          childName: document.getElementById('childName').value,
+          age: document.getElementById('age').value,
+          gender: document.getElementById('gender').value,
+          lastSeen: document.getElementById('lastSeen').value,
+          lastSeenTime: document.getElementById('lastSeenTime').value,
+          description: document.getElementById('description').value,
+          parentName: document.getElementById('parentName').value,
+          parentContact: document.getElementById('parentContact').value,
+          image: reader.result
+        };
+
+        saveReport(report);
+        document.getElementById('reportStatus').innerHTML =
+          "<span style='color:green;font-weight:600;'>Report submitted successfully!</span>";
+        document.getElementById('missingChildForm').reset();
+        renderReports();
+      };
+
+      if (file) reader.readAsDataURL(file);
+    };
+
+    renderReports();
+  </script>
+</body>
+</html>

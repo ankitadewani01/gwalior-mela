@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complaints & Feedback - Detailed Multi-Step</title>
+  <style>
+    body {
+      font-family: "Poppins", Arial, sans-serif;
+      background: #fffaf5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .complaints-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 50px 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #d35400;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    p.description {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 40px;
+    }
+
+    form {
+      background: #fff;
+      border: 1px solid #f2d3b3;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #d35400;
+      box-shadow: 0 0 5px rgba(211,84,0,0.4);
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .btn-next {
+      background: #d35400;
+      color: #fff;
+    }
+
+    .btn-next:hover {
+      background: #b34700;
+    }
+
+    .btn-prev {
+      background: #ccc;
+    }
+
+    .btn-prev:hover {
+      background: #bbb;
+    }
+
+    .contact-info {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .contact-info .help-title {
+      font-weight: 600;
+      color: #333;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .btn-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<section class="complaints-section">
+  <h2>Complaints & Feedback</h2>
+  <p class="description">Please fill the details below. Your feedback helps us improve the Trade Fair experience.</p>
+
+  <form id="complaintForm">
+    <!-- Step 1: Personal & Contact Details -->
+    <div class="form-step active">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Enter your full name" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" name="phone" placeholder="Enter your phone number" required>
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <input type="text" name="address" placeholder="Your address" required>
+      </div>
+      <div class="form-group">
+        <label>Complaint Category</label>
+        <select name="category" required>
+          <option value="">Select a category</option>
+          <option value="stall">Stall & Vendor Issues</option>
+          <option value="facilities">Facilities & Cleanliness</option>
+          <option value="management">Event Management</option>
+          <option value="staff">Staff Behaviour / Harassment</option>
+          <option value="ticket">Ticketing / Entry Issues</option>
+          <option value="technical">Technical / Website Problems</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Vendor / Stall Name (if applicable)</label>
+        <input type="text" name="vendor" placeholder="Stall / Vendor name">
+      </div>
+      <div class="form-group">
+        <label>Severity of Complaint</label>
+        <select name="severity" required>
+          <option value="">Select severity</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="critical">Critical</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-next" onclick="nextStep()">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Incident Details -->
+    <div class="form-step">
+      <div class="form-group">
+        <label>Date & Time of Incident</label>
+        <input type="datetime-local" name="date" required>
+      </div>
+      <div class="form-group">
+        <label>Location / Stall No.</label>
+        <input type="text" name="location" placeholder="e.g., Hall 3, Stall 25">
+      </div>
+      <div class="form-group">
+        <label>Affected Service / Section</label>
+        <input type="text" name="service" placeholder="Which service/section was affected?">
+      </div>
+      <div class="form-group">
+        <label>Was it resolved immediately?</label>
+        <select name="resolved">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Witnesses (if any)</label>
+        <input type="text" name="witnesses" placeholder="Names of witnesses">
+      </div>
+      <div class="form-group">
+        <label>Preferred Resolution</label>
+        <select name="resolution">
+          <option value="">Select preferred action</option>
+          <option value="refund">Refund</option>
+          <option value="compensation">Compensation</option>
+          <option value="warning">Warning to staff/vendor</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+        <button type="button" class="btn btn-next" onclick="nextStep()">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Detailed Feedback & File Upload -->
+    <div class="form-step">
+      <div class="form-group">
+        <label>Detailed Description</label>
+        <textarea name="description" rows="4" placeholder="Describe your complaint clearly..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Upload Evidence (optional)</label>
+        <input type="file" name="file">
+      </div>
+      <div class="form-group">
+        <label>Rate Overall Experience</label>
+        <select name="rating" required>
+          <option value="">Select rating</option>
+          <option value="1">1 - Poor</option>
+          <option value="2">2 - Fair</option>
+          <option value="3">3 - Good</option>
+          <option value="4">4 - Very Good</option>
+          <option value="5">5 - Excellent</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Would you recommend us to others?</label>
+        <input type="radio" name="recommend" value="yes" required> Yes
+        <input type="radio" name="recommend" value="no"> No
+      </div>
+      <div class="form-group">
+        <label>Additional Comments</label>
+        <textarea name="comments" rows="3" placeholder="Any extra feedback"></textarea>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-prev" onclick="prevStep()">Previous</button>
+        <button type="submit" class="btn btn-next">Submit</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="contact-info">
+    <p class="help-title">Need urgent help?</p>
+    <p>📞 Helpline: +91-9876543210 | 📧 Email: support@gwaliormela.in</p>
+    <p>Response time: within 24 hours</p>
+  </div>
+</section>
+
+<script>
+  const steps = document.querySelectorAll(".form-step");
+  let currentStep = 0;
+
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.classList.toggle("active", i === index);
+    });
+  }
+
+  function nextStep() {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      showStep(currentStep);
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  }
+
+  const form = document.getElementById("complaintForm");
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    alert("✅ Thank you! Your complaint has been submitted successfully.");
+    form.reset();
+    currentStep = 0;
+    showStep(currentStep);
+  });
+</script>
+
+</body>
+</html>

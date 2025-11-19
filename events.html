@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events at Gwalior Vyapar Mela</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <style>
+        .events-hero {
+            background: linear-gradient(90deg, #ffb347 0%, #ffcc80 100%);
+            padding: 60px 0 40px 0;
+            text-align: center;
+        }
+        .events-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #d35400;
+            margin-bottom: 18px;
+        }
+        .events-hero p {
+            font-size: 1.25rem;
+            color: #333;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .events-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+            margin: 40px 0 60px 0;
+        }
+        .event-card {
+            background: #fff7ed;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(44,62,80,0.10);
+            width: 320px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .event-card:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+            transform: translateY(-6px) scale(1.03);
+        }
+        .event-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+        }
+        .event-card-body {
+            padding: 22px 18px 18px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+        .event-desc {
+            font-size: 1.05rem;
+            color: #333;
+            flex: 1;
+        }
+        @media (max-width: 900px) {
+            .events-grid { gap: 18px; }
+            .event-card { width: 95vw; max-width: 400px; }
+        }
+    </style>
+</head>
+<body>
+    <section class="events-hero">
+        <h1>Events at Gwalior Vyapar Mela</h1>
+        <p>Experience the vibrant tapestry of culture, business, and entertainment through our 21 unique events. Each event brings its own flavor, excitement, and memories to the fairground. Explore the highlights below!</p>
+    </section>
+    <main>
+        <div class="container">
+            <div class="events-grid" id="eventsGrid">
+                <!-- 21 event cards, each with data attributes for modal -->
+                <div class="event-card" tabindex="0" data-title="Inauguration Ceremony" data-img="images/events/event1.png" data-desc="A grand opening with dignitaries, cultural performances, and a vibrant start to the mela.">
+                    <img src="images/events/event1.png" alt="Inauguration Ceremony">
+                    <div class="event-card-body">
+                        <div class="event-title">Inauguration Ceremony</div>
+                        <div class="event-desc">A grand opening with dignitaries, cultural performances, and a vibrant start to the mela.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Food Festival" data-img="images/events/event2.png" data-desc="Savor the best of local and international cuisines at our bustling food festival.">
+                    <img src="images/events/event2.png" alt="Food Festival">
+                    <div class="event-card-body">
+                        <div class="event-title">Food Festival</div>
+                        <div class="event-desc">Savor the best of local and international cuisines at our bustling food festival.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Handicraft Exhibition" data-img="images/events/event3.png" data-desc="Discover exquisite handicrafts from artisans across India, celebrating tradition and creativity.">
+                    <img src="images/events/event3.png" alt="Handicraft Exhibition">
+                    <div class="event-card-body">
+                        <div class="event-title">Handicraft Exhibition</div>
+                        <div class="event-desc">Discover exquisite handicrafts from artisans across India, celebrating tradition and creativity.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Cultural Night" data-img="images/events/event4.png" data-desc="An evening of mesmerizing dance, music, and drama performances by renowned artists.">
+                    <img src="images/events/event4.png" alt="Cultural Night">
+                    <div class="event-card-body">
+                        <div class="event-title">Cultural Night</div>
+                        <div class="event-desc">An evening of mesmerizing dance, music, and drama performances by renowned artists.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Trade Expo" data-img="images/events/event5.png" data-desc="Showcasing innovations and products from leading businesses and startups.">
+                    <img src="images/events/event5.png" alt="Trade Expo">
+                    <div class="event-card-body">
+                        <div class="event-title">Trade Expo</div>
+                        <div class="event-desc">Showcasing innovations and products from leading businesses and startups.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Kids Zone" data-img="images/events/event6.png" data-desc="Fun rides, games, and activities for children of all ages.">
+                    <img src="images/events/event6.png" alt="Kids Zone">
+                    <div class="event-card-body">
+                        <div class="event-title">Kids Zone</div>
+                        <div class="event-desc">Fun rides, games, and activities for children of all ages.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Auto Expo" data-img="images/events/event7.png" data-desc="Latest cars, bikes, and auto accessories on display for enthusiasts.">
+                    <img src="images/events/event7.png" alt="Auto Expo">
+                    <div class="event-card-body">
+                        <div class="event-title">Auto Expo</div>
+                        <div class="event-desc">Latest cars, bikes, and auto accessories on display for enthusiasts.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Fashion Show" data-img="images/events/event8.png" data-desc="Glamorous runway shows featuring top designers and local talent.">
+                    <img src="images/events/event8.png" alt="Fashion Show">
+                    <div class="event-card-body">
+                        <div class="event-title">Fashion Show</div>
+                        <div class="event-desc">Glamorous runway shows featuring top designers and local talent.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Book Fair" data-img="images/events/event9.png" data-desc="A paradise for book lovers with stalls from major publishers and authors.">
+                    <img src="images/events/event9.png" alt="Book Fair">
+                    <div class="event-card-body">
+                        <div class="event-title">Book Fair</div>
+                        <div class="event-desc">A paradise for book lovers with stalls from major publishers and authors.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Startup Summit" data-img="images/events/event10.png" data-desc="Budding entrepreneurs present their ideas to investors and the public.">
+                    <img src="images/events/event10.png" alt="Startup Summit">
+                    <div class="event-card-body">
+                        <div class="event-title">Startup Summit</div>
+                        <div class="event-desc">Budding entrepreneurs present their ideas to investors and the public.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Singing Competition" data-img="images/events/event11.png" data-desc="Free health checkups and wellness advice from top medical professionals.">
+                    <img src="images/events/event11.png" alt="Singing Competition">
+                    <div class="event-card-body">
+                        <div class="event-title">Singing Competition</div>
+                        <div class="event-desc">Free health checkups and wellness advice from top medical professionals.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Art Exhibition" data-img="images/events/event12.png" data-desc="An exhibition of paintings, sculptures, and installations by talented artists.">
+                    <img src="images/events/event12.png" alt="Art Exhibition">
+                    <div class="event-card-body">
+                        <div class="event-title">Art Exhibition</div>
+                        <div class="event-desc">An exhibition of paintings, sculptures, and installations by talented artists.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Technology Expo" data-img="images/events/event13.png" data-desc="Experience the latest in tech, gadgets, and digital innovation.">
+                    <img src="images/events/event13.png" alt="Technology Expo">
+                    <div class="event-card-body">
+                        <div class="event-title">Technology Expo</div>
+                        <div class="event-desc">Experience the latest in tech, gadgets, and digital innovation.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Sports Tournament" data-img="images/events/event14.png" data-desc="Exciting matches and competitions in various sports disciplines.">
+                    <img src="images/events/event14.png" alt="Sports Tournament">
+                    <div class="event-card-body">
+                        <div class="event-title">Sports Tournament</div>
+                        <div class="event-desc">Exciting matches and competitions in various sports disciplines.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Music Concert" data-img="images/events/event15.png" data-desc="Live performances by popular bands and solo artists.">
+                    <img src="images/events/event15.png" alt="Music Concert">
+                    <div class="event-card-body">
+                        <div class="event-title">Music Concert</div>
+                        <div class="event-desc">Live performances by popular bands and solo artists.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Dance Competition" data-img="images/events/event16.png" data-desc="Laugh out loud with stand-up comedians and improv acts.">
+                    <img src="images/events/event16.png" alt="Dance Competition">
+                    <div class="event-card-body">
+                        <div class="event-title">Dance Competition</div>
+                        <div class="event-desc">Laugh out loud with stand-up comedians and improv acts.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Fun Rides" data-img="images/events/event17.png" data-desc="Interactive science exhibits and experiments for all ages.">
+                    <img src="images/events/event17.png" alt="Fun Rides">
+                    <div class="event-card-body">
+                        <div class="event-title">Fun Rides</div>
+                        <div class="event-desc">Interactive science exhibits and experiments for all ages.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Pet Show" data-img="images/events/event18.png" data-desc="A fun showcase of pets and animal talent competitions.">
+                    <img src="images/events/event18.png" alt="Pet Show">
+                    <div class="event-card-body">
+                        <div class="event-title">Pet Show</div>
+                        <div class="event-desc">A fun showcase of pets and animal talent competitions.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Flower Show" data-img="images/events/event19.png" data-desc="A colorful display of flowers, plants, and garden designs.">
+                    <img src="images/events/event19.png" alt="Flower Show">
+                    <div class="event-card-body">
+                        <div class="event-title">Flower Show</div>
+                        <div class="event-desc">A colorful display of flowers, plants, and garden designs.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Farmers' meet" data-img="images/events/event20.png" data-desc="Special screenings of acclaimed films and documentaries.">
+                    <img src="images/events/event20.png" alt="Farmers' meet">
+                    <div class="event-card-body">
+                        <div class="event-title">Farmers' meet</div>
+                        <div class="event-desc">Special screenings of acclaimed films and documentaries.</div>
+                    </div>
+                </div>
+                <div class="event-card" tabindex="0" data-title="Closing Ceremony" data-img="images/events/event21.png" data-desc="A spectacular finale with awards, performances, and celebrations.">
+                    <img src="images/events/event21.png" alt="Closing Ceremony">
+                    <div class="event-card-body">
+                        <div class="event-title">Closing Ceremony</div>
+                        <div class="event-desc">A spectacular finale with awards, performances, and celebrations.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+        <!-- Modal for event details -->
+        <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="border-radius: 18px;">
+                    <div class="modal-header" style="border-bottom:none;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:2rem; color:#d35400; opacity:0.8;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="eventModalLabel" style="font-size:2rem; font-weight:700; color:#d35400;"></h4>
+                    </div>
+                    <div class="modal-body" style="text-align:center;">
+                        <img id="eventModalImg" src="" alt="Event Image" style="width:100%; max-width:400px; border-radius:12px; margin-bottom:18px;">
+                        <p id="eventModalDesc" style="font-size:1.15rem; color:#333;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script>
+            $(function() {
+                $('.event-card').on('click keypress', function(e) {
+                    if (e.type === 'click' || (e.type === 'keypress' && (e.which === 13 || e.which === 32))) {
+                        var title = $(this).data('title');
+                        var img = $(this).data('img');
+                        var desc = $(this).data('desc');
+                        $('#eventModalLabel').text(title);
+                        $('#eventModalImg').attr('src', img).attr('alt', title);
+                        $('#eventModalDesc').text(desc);
+                        $('#eventModal').modal('show');
+                    }
+                });
+            });
+        </script>
+</body>
+</html>
