@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Police Emergency — Gwalior</title>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+  :root{
+    --accent:#d35400;
+    --accent-dark:#d35400;
+    --danger:#e53935;
+    --bg:#f5f8fb;
+    --card:#ffffff;
+    --muted:#555;
+  }
+  *{box-sizing:border-box;font-family:Inter,Segoe UI,system-ui,Arial;}
+  body{margin:0;background:var(--bg);color:#111;}
+  header{background:linear-gradient(90deg,var(--accent),var(--accent-dark));color:#fff;padding:18px;text-align:center}
+  header h1{margin:0;font-size:20px}
+  .top-row{display:flex;flex-wrap:wrap;gap:12px;padding:12px;align-items:center;justify-content:center}
+  .quick-btn{background:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 6px 18px rgba(8,40,80,0.08);display:flex;gap:10px;align-items:center}
+  .quick-btn a{color:var(--accent);font-weight:700;text-decoration:none}
+  main{display:grid;grid-template-columns:360px 1fr;gap:16px;padding:16px}
+  @media(max-width:980px){main{grid-template-columns:1fr}}
+  .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(8,40,80,0.06)}
+  h2{margin:0 0 10px 0}
+  label{display:block;margin-top:8px;font-weight:600}
+  input,select,textarea{width:100%;padding:8px;margin-top:6px;border:1px solid #d8e0ea;border-radius:6px}
+  button{background:var(--accent);color:#fff;padding:9px 12px;border:none;border-radius:8px;cursor:pointer}
+  button.ghost{background:#fff;color:var(--accent);border:1px solid #d8e0ea}
+  button.danger{background:var(--danger)}
+  .small{font-size:13px;color:var(--muted)}
+  #map{height:640px;border-radius:10px}
+  .contact-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .contact-pill{background:#fff;padding:8px 10px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.06);font-weight:700}
+  .tips ul{padding-left:18px;margin:8px 0}
+  .incident-card{border:1px solid #eef3fb;padding:8px;border-radius:8px;margin-bottom:8px;position:relative}
+  .incident-actions{position:absolute;right:8px;top:8px;display:flex;gap:6px}
+  .img-preview{max-width:100%;border-radius:6px;margin-top:8px;border:1px solid #e6eef9}
+  .modal-overlay{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:9999}
+  .modal{background:#fff;border-radius:10px;padding:18px;max-width:520px;width:94%;box-shadow:0 8px 30px rgba(2,18,50,0.3);position:relative}
+  .modal h3{margin-top:0}
+  .modal .close{position:absolute;top:10px;right:12px;border:none;background:none;font-size:18px;cursor:pointer}
+  .nearest-highlight{border:2px dashed var(--accent);padding:6px;border-radius:8px;background:linear-gradient(90deg, #f0fbff, #ffffff)}
+  footer{padding:12px;text-align:center;color:#fff;background:linear-gradient(90deg,var(--accent-dark),var(--accent))}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Police Emergency — Gwalior</h1>
+  <p class="small">Fast access to police services, stations, report form, and safety tools.</p>
+
+  <div class="top-row" style="margin-top:12px">
+    <div class="quick-btn">
+      <div style="font-weight:900;font-size:18px;color:var(--accent)">🚓</div>
+      <div>
+        <div class="small">Police Emergency</div>
+        <a href="tel:100">Call 100</a>
+      </div>
+    </div>
+
+    <div class="quick-btn">
+      <div style="font-weight:900;font-size:18px;color:var(--accent)">📞</div>
+      <div>
+        <div class="small">Women Helpline</div>
+        <a href="tel:1090">Call 1090</a>
+      </div>
+    </div>
+
+    <div class="quick-btn">
+      <div style="font-weight:900;font-size:18px;color:var(--accent)">🚑</div>
+      <div>
+        <div class="small">Ambulance</div>
+        <a href="tel:108">Call 108</a>
+      </div>
+    </div>
+
+    <div class="quick-btn">
+      <div style="font-weight:900;font-size:18px;color:var(--accent)">👶</div>
+      <div>
+        <div class="small">Child Helpline</div>
+        <a href="tel:1098">Call 1098</a>
+      </div>
+    </div>
+
+    <div class="quick-btn" id="panicWrap" style="cursor:pointer" title="Panic (visual + call option)">
+      <div style="font-weight:900;font-size:18px;color:#fff;background:var(--danger);padding:6px;border-radius:8px">⚠️</div>
+      <div>
+        <div class="small">Panic Button</div>
+        <button id="panicBtn" class="danger" style="padding:6px 10px">Panic</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- LEFT: controls, form, tips -->
+  <div style="padding-right:6px">
+    <div class="card">
+      <h2>Report Incident / Complaint</h2>
+      <form id="incidentForm">
+        <label>Name</label>
+        <input id="inName" type="text" placeholder="Your name (optional)">
+        <label>Contact (phone)</label>
+        <input id="inContact" type="text" placeholder="Mobile number">
+        <label>Type of incident</label>
+        <select id="inType">
+          <option>Harassment</option>
+          <option>Domestic Violence</option>
+          <option>Theft / Robbery</option>
+          <option>Missing Person</option>
+          <option>Accident</option>
+          <option>Other</option>
+        </select>
+        <label>Location (address or area)</label>
+        <input id="inLocation" type="text" placeholder="Ex: Lashkar, Gwalior">
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button type="button" id="shareLocation" class="ghost">Share Live Location</button>
+          <button type="button" id="locNearest" class="ghost">Locate Nearest Police Station</button>
+        </div>
+
+        <label style="margin-top:10px">Details</label>
+        <textarea id="inDetails" rows="4" placeholder="Describe what happened"></textarea>
+
+        <label style="margin-top:8px">Attach photo (optional)</label>
+        <input id="inImage" type="file" accept="image/*">
+        <img id="imgPreview" class="img-preview" style="display:none" alt="preview">
+
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button id="submitIncident" type="submit">Submit Incident</button>
+          <button id="clearForm" type="button" class="ghost">Clear</button>
+        </div>
+        <div id="formMsg" class="small" style="margin-top:8px;color:green;display:none"></div>
+      </form>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Submitted Incidents</h3>
+      <div id="incidentList" style="max-height:320px;overflow:auto"></div>
+      <div style="margin-top:8px">
+        <button id="clearAll" class="ghost">Clear All Local Incidents</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Quick Access</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <a class="contact-pill" href="./portal.html">MP Police Portal</a>
+        <a class="contact-pill" href="./fir.html">File FIR Online</a>
+        <a class="contact-pill" href="./call.html">Call Police</a>
+        <a class="contact-pill" id="dirNearest" href="#" style="display:none">Directions to nearest</a>
+      </div>
+
+      <div style="margin-top:12px">
+        <h4 class="small">Safety Tips</h4>
+        <div class="tips small">
+          <ul>
+            <li>Keep emergency numbers on speed dial (100,1090,108).</li>
+            <li>Share your live location with a trusted contact when travelling alone.</li>
+            <li>Stay in well-lit public areas; avoid isolated routes at night.</li>
+            <li>Record important details (vehicle number, description), but stay safe first.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Map -->
+  <div>
+    <div class="card">
+      <h2>Police Stations & Help Centers — Map</h2>
+      <div id="map"></div>
+      <p class="small" style="margin-top:8px">Click any marker to view full details and get directions.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  © 2025 Police Emergency — Gwalior • Local tool (data stored on your device)
+</footer>
+
+<!-- Modal for station details -->
+<div id="modalOverlay" class="modal-overlay">
+  <div class="modal">
+    <button class="close" id="closeModal">✕</button>
+    <h3 id="modalTitle">Station</h3>
+    <p id="modalAddr" class="small"></p>
+    <p id="modalDesc"></p>
+    <p><b>Officer / Contact:</b> <span id="modalContact"></span></p>
+    <p><b>Working hours:</b> <span id="modalHours"></span></p>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <a id="modalCall" href="#" class="ghost" style="padding:8px;border-radius:8px">Call</a>
+      <a id="modalDirections" href="#" target="_blank" class="ghost" style="padding:8px;border-radius:8px">Directions</a>
+    </div>
+  </div>
+</div>
+
+<!-- Leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+/* ---------------------------
+   Data: Gwalior Police Stations / Women Help Centers
+   Coordinates approximate — adjust if you need exact addresses.
+   --------------------------- */
+const stations = [
+  { id:'gwalior-ps', name:'Gwalior Police Control Room', lat:26.2250, lng:78.1860, address:'Police Control Room, Gwalior', contact:'100', officer:'Control Room', hours:'24x7', desc:'Primary control room handling all police emergencies and dispatch.'},
+  { id:'maharajpura-ps', name:'Maharajpura Police Station', lat:26.2259, lng:78.1710, address:'Maharajpura, Gwalior', contact:'0751-2445566', officer:'SHO Maharajpura', hours:'24x7', desc:'Local police station for Maharajpura area.'},
+  { id:'lashkar-mahila', name:'Mahila Thana (Women Police Station) - Lashkar', lat:26.2245, lng:78.1785, address:'Lashkar, Phalka Bazar, Gwalior', contact:'0751-2445500', officer:'SHO (Women Thana)', hours:'24x7', desc:'Dedicated women police station for crimes against women.'},
+  { id:'one-stop', name:'One Stop Centre (Sakhi)', lat:26.2162, lng:78.1797, address:'Near JAH Hospital, Lashkar', contact:'0751-2323001', officer:'Coordinator (Sakhi)', hours:'24x7', desc:'Integrated support: medical, legal, counseling for women survivors.'},
+  { id:'sadar-ps', name:'Sadar Police Station', lat:26.2045, lng:78.1884, address:'Sadar Bazar, Gwalior', contact:'0751-2441122', officer:'SHO Sadar', hours:'24x7', desc:'Covers central market and nearby localities.'},
+  { id:'gandhi-ps', name:'Gandhi Nagar Police Station', lat:26.2109, lng:78.1707, address:'Gandhi Nagar, Gwalior', contact:'0751-2439900', officer:'SHO Gandhi Nagar', hours:'24x7', desc:'Local police station for southern Gwalior areas.'},
+  { id:'women-help-centre', name:'District Women Helpdesk', lat:26.2183, lng:78.1828, address:'Collectorate Campus, Gwalior', contact:'1090', officer:'Women Help Desk', hours:'24x7', desc:'District level helpdesk supporting women with counseling, shelter, and police coordination.'},
+  { id:'ambulance-hub', name:'Medical Emergency / Ambulance Hub', lat:26.2140, lng:78.1700, address:'Near Major Hospital, Gwalior', contact:'108', officer:'Ambulance Control', hours:'24x7', desc:'Ambulance coordination for medical emergencies.'}
+];
+
+/* ---------------------------
+   Map initialization
+   --------------------------- */
+const map = L.map('map').setView([26.2183,78.1828], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+
+const markers = {}; // store markers by id
+const markerLayer = L.layerGroup().addTo(map);
+
+stations.forEach(st => {
+  const m = L.marker([st.lat, st.lng]).addTo(markerLayer);
+  m.bindPopup(`<b>${escapeHtml(st.name)}</b><br><button onclick="openStationModal('${st.id}')">View details</button>`);
+  markers[st.id] = { marker: m, data: st };
+});
+
+/* ---------------------------
+   Modal handling
+   --------------------------- */
+const modalOverlay = document.getElementById('modalOverlay');
+const closeModal = document.getElementById('closeModal');
+closeModal.addEventListener('click', ()=> modalOverlay.style.display='none');
+
+function openStationModal(id){
+  const s = stations.find(x => x.id === id);
+  if(!s) return alert('Station not found');
+  document.getElementById('modalTitle').textContent = s.name;
+  document.getElementById('modalAddr').textContent = s.address;
+  document.getElementById('modalDesc').textContent = s.desc;
+  document.getElementById('modalContact').innerHTML = (s.contact ? `<a href="tel:${s.contact}">${s.contact}</a>` : '—');
+  document.getElementById('modalHours').textContent = s.hours || 'Not specified';
+  document.getElementById('modalCall').setAttribute('href', `tel:${s.contact || '100'}`);
+  const gmaps = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.lat + ',' + s.lng)}&travelmode=driving`;
+  document.getElementById('modalDirections').setAttribute('href', gmaps);
+  modalOverlay.style.display='flex';
+}
+
+/* ---------------------------
+   Utilities
+   --------------------------- */
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function haversine(lat1,lon1,lat2,lon2){
+  const toRad = deg => deg * Math.PI/180;
+  const R = 6371; // km
+  const dLat = toRad(lat2-lat1);
+  const dLon = toRad(lon2-lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  const c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  return R * c; // km
+}
+
+/* ---------------------------
+   Incident form & storage (localStorage)
+   --------------------------- */
+const incidentForm = document.getElementById('incidentForm');
+const inName = document.getElementById('inName');
+const inContact = document.getElementById('inContact');
+const inType = document.getElementById('inType');
+const inLocation = document.getElementById('inLocation');
+const inDetails = document.getElementById('inDetails');
+const inImage = document.getElementById('inImage');
+const imgPreview = document.getElementById('imgPreview');
+const formMsg = document.getElementById('formMsg');
+const incidentList = document.getElementById('incidentList');
+const dirNearest = document.getElementById('dirNearest');
+
+let tempImageData = null; // dataURL if user selects an image
+inImage.addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file){ imgPreview.style.display='none'; tempImageData=null; return; }
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    tempImageData = ev.target.result;
+    imgPreview.src = tempImageData;
+    imgPreview.style.display='block';
+  };
+  reader.readAsDataURL(file);
+});
+
+function loadIncidents(){
+  const arr = JSON.parse(localStorage.getItem('gwl_incidents') || '[]');
+  incidentList.innerHTML = arr.length === 0 ? '<p class="small">No incidents submitted locally.</p>' : '';
+  arr.forEach((it, idx) => {
+    const div = document.createElement('div');
+    div.className = 'incident-card';
+    div.innerHTML = `
+      <div style="font-weight:700">${escapeHtml(it.type)} <span style="font-weight:400;color:#666"> — ${it.contact||'No contact'}</span></div>
+      <div class="small" style="margin-top:4px">${escapeHtml(it.location || 'Location not provided')} • ${new Date(it.time).toLocaleString()}</div>
+      <div style="margin-top:6px">${escapeHtml(it.details || '')}</div>
+      ${it.image ? `<img src="${it.image}" class="img-preview">` : ''}
+      <div class="incident-actions">
+        <button class="ghost" onclick="viewIncident(${idx})">View</button>
+        <button class="ghost" onclick="shareIncident(${idx})">Share</button>
+        <button style="background:#ff5252;color:#fff;border:none;padding:6px;border-radius:6px;cursor:pointer" onclick="deleteIncident(${idx})">Delete</button>
+      </div>
+    `;
+    incidentList.appendChild(div);
+  });
+}
+
+function saveIncident(obj){
+  const arr = JSON.parse(localStorage.getItem('gwl_incidents') || '[]');
+  arr.unshift(obj);
+  localStorage.setItem('gwl_incidents', JSON.stringify(arr));
+  loadIncidents();
+}
+
+incidentForm.addEventListener('submit', e=>{
+  e.preventDefault();
+  const obj = {
+    name: inName.value.trim(),
+    contact: inContact.value.trim(),
+    type: inType.value,
+    location: inLocation.value.trim(),
+    details: inDetails.value.trim(),
+    image: tempImageData,
+    time: Date.now(),
+    status: 'Submitted'
+  };
+  saveIncident(obj);
+  formMsg.textContent = 'Incident saved locally.';
+  formMsg.style.display='block';
+  setTimeout(()=>formMsg.style.display='none',3000);
+  incidentForm.reset();
+  imgPreview.style.display='none';
+  tempImageData = null;
+});
+
+function deleteIncident(i){
+  const arr = JSON.parse(localStorage.getItem('gwl_incidents') || '[]');
+  if(!arr[i]) return;
+  if(!confirm('Delete this incident locally?')) return;
+  arr.splice(i,1);
+  localStorage.setItem('gwl_incidents', JSON.stringify(arr));
+  loadIncidents();
+}
+
+function clearAllIncidents(){
+  if(!confirm('Clear all local incidents?')) return;
+  localStorage.removeItem('gwl_incidents');
+  loadIncidents();
+}
+
+function viewIncident(i){
+  const arr = JSON.parse(localStorage.getItem('gwl_incidents') || '[]');
+  const it = arr[i];
+  if(!it) return alert('Not found');
+  const text = `Type: ${it.type}\nContact: ${it.contact}\nLocation: ${it.location}\nTime: ${new Date(it.time).toLocaleString()}\n\nDetails:\n${it.details}`;
+  alert(text); // simple viewer; you can expand to a modal if preferred
+}
+
+// simulate share: copy text to clipboard
+function shareIncident(i){
+  const arr = JSON.parse(localStorage.getItem('gwl_incidents') || '[]');
+  const it = arr[i];
+  if(!it) return;
+  const text = `Incident (${it.type}) at ${it.location || 'unknown'} on ${new Date(it.time).toLocaleString()}. Contact: ${it.contact || '—'}. Details: ${it.details || '—'}`;
+  navigator.clipboard?.writeText(text).then(()=>alert('Incident text copied to clipboard'), ()=>alert('Copy failed'));
+}
+
+document.getElementById('clearAll').addEventListener('click', clearAllIncidents);
+
+/* ---------------------------
+   Locate nearest police station (geolocation)
+   --------------------------- */
+let userMarker = null;
+let nearestStation = null;
+
+document.getElementById('locNearest').addEventListener('click', ()=> {
+  if(!navigator.geolocation) return alert('Geolocation not supported by your browser.');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    highlightNearest(lat, lon);
+    map.setView([lat, lon], 14);
+    if(userMarker) map.removeLayer(userMarker);
+    userMarker = L.circleMarker([lat, lon], {radius:7, color:'#2b9', fillColor:'#2b9', fillOpacity:0.9}).addTo(map).bindPopup('Your location').openPopup();
+  }, err=> {
+    alert('Unable to get location: '+err.message);
+  }, {enableHighAccuracy:true, timeout:10000});
+});
+
+function highlightNearest(lat, lon){
+  let best = null, bestD = 1e9;
+  stations.forEach(s => {
+    const d = haversine(lat, lon, s.lat, s.lng);
+    if(d < bestD){ bestD = d; best = s; }
+  });
+  if(!best) return alert('No stations found');
+  nearestStation = best;
+  // visually highlight
+  Object.values(markers).forEach(obj=>{
+    try{ obj.marker.setIcon(new L.Icon.Default()); }catch(e){}
+  });
+  // draw a circle around station
+  if(window._nearestCircle) map.removeLayer(window._nearestCircle);
+  window._nearestCircle = L.circle([best.lat, best.lng], {radius:500, color:'#0b72b9', weight:2}).addTo(map);
+  map.setView([best.lat, best.lng], 15);
+  // show popup modal
+  openStationModal(best.id);
+  // set directions link
+  dirNearest.style.display='inline-block';
+  const gmaps = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(best.lat + ',' + best.lng)}&travelmode=driving`;
+  dirNearest.setAttribute('href', gmaps);
+  dirNearest.setAttribute('target','_blank');
+}
+
+/* ---------------------------
+   Share live location button: get location and fill location field
+   --------------------------- */
+document.getElementById('shareLocation').addEventListener('click', ()=>{
+  if(!navigator.geolocation) return alert('Geolocation not supported.');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat = pos.coords.latitude, lon = pos.coords.longitude;
+    const txt = `My live location: ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+    inLocation.value = txt;
+    // place a temporary marker
+    if(userMarker) map.removeLayer(userMarker);
+    userMarker = L.marker([lat, lon], {opacity:0.9}).addTo(map).bindPopup('Your shared location').openPopup();
+    map.setView([lat, lon], 14);
+  }, err => alert('Failed to get location: '+err.message), {enableHighAccuracy:true});
+});
+
+/* ---------------------------
+   Panic button behavior (visual + sound + call option)
+   --------------------------- */
+const panicBtn = document.getElementById('panicBtn');
+let panicOverlay = null;
+panicBtn.addEventListener('click', ()=> {
+  // show big overlay with call option
+  if(!panicOverlay){
+    panicOverlay = document.createElement('div');
+    panicOverlay.style.position='fixed';
+    panicOverlay.style.left=0; panicOverlay.style.top=0;
+    panicOverlay.style.width='100%'; panicOverlay.style.height='100%';
+    panicOverlay.style.background='rgba(229,57,53,0.92)';
+    panicOverlay.style.display='flex'; panicOverlay.style.alignItems='center'; panicOverlay.style.justifyContent='center';
+    panicOverlay.style.zIndex=99999;
+    panicOverlay.innerHTML = `
+      <div style="text-align:center;color:#fff;padding:20px;border-radius:12px">
+        <h1 style="margin:0 0 8px">!!! PANIC ACTIVATED !!!</h1>
+        <p style="margin:0 0 16px">Your browser suggests calling the police now.</p>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <a href="tel:100" style="background:#fff;color:#e53935;padding:12px 16px;border-radius:8px;font-weight:700;text-decoration:none">Call 100</a>
+          <button id="dismissPanic" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 14px;border-radius:8px">Dismiss</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(panicOverlay);
+
+    // Play short beep sequence
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      function beep(freq, duration){
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(0);
+        g.gain.setValueAtTime(0.0001, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+        setTimeout(()=> {
+          g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration/1000);
+          o.stop(ctx.currentTime + duration/1000 + 0.02);
+        }, duration);
+      }
+      beep(880, 220); setTimeout(()=>beep(660,180),240); setTimeout(()=>beep(990,160),450);
+    } catch(e){ /* audio not available; ignore */ }
+    document.getElementById('dismissPanic').addEventListener('click', ()=>{
+      panicOverlay.remove(); panicOverlay=null;
+    });
+  }
+});
+
+/* ---------------------------
+   Init load
+   --------------------------- */
+loadIncidents();
+
+/* ---------------------------
+   Small UI helpers
+   --------------------------- */
+document.getElementById('clearForm').addEventListener('click', ()=> {
+  incidentForm.reset(); imgPreview.style.display='none'; tempImageData=null;
+});
+document.getElementById('submitIncident').addEventListener('click', ()=> {
+  // small validation: require either contact or name or details
+  if(!inContact.value.trim() && !inName.value.trim()){
+    if(!confirm('No contact or name provided. Submit anyway?')) return;
+  }
+});
+/* ---------------------------
+   End
+   --------------------------- */
+</script>
+</body>
+</html>

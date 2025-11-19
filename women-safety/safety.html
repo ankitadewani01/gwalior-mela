@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gwalior Women Helpline Portal</title>
+
+<!-- Leaflet Map CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+:root{
+  --accent:#d35400;
+  --bg:#fff6f8;
+  --card:#ffffff;
+  --muted:#555;
+}
+*{box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{margin:0;background:var(--bg);color:#222;}
+header{background:var(--accent);color:#fff;text-align:center;padding:15px;}
+header h1{margin:0;}
+main{display:flex;flex-wrap:wrap;padding:16px;gap:20px;}
+section{flex:1;min-width:320px;}
+.card{background:var(--card);padding:15px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin-bottom:15px;}
+label{display:block;margin-top:10px;font-weight:600;}
+input,textarea{width:100%;padding:8px;margin-top:5px;border:1px solid #ccc;border-radius:6px;}
+button{background:var(--accent);color:white;padding:10px 15px;border:none;border-radius:6px;margin-top:10px;cursor:pointer;}
+button:hover{background:solid #d35400;}
+ul{list-style-type:none;padding:0;}
+li{padding:5px 0;}
+a{color:var(--accent);text-decoration:none;}
+footer{text-align:center;padding:10px;background:#222;color:#fff;font-size:14px;}
+#map{height:500px;border-radius:10px;}
+.hint{font-size:13px;color:var(--muted);}
+.complaint-card{background:#fff;padding:8px;border-radius:6px;margin-bottom:8px;border:1px solid #eee;}
+.delete-btn{float:right;background:solid #d35400;border:none;color:white;padding:4px 8px;border-radius:4px;cursor:pointer;}
+.delete-btn:hover{background:solid #d35400;}
+#overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:9999;
+}
+#popup{
+  background:#fff;padding:20px;border-radius:10px;width:90%;max-width:400px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);text-align:left;position:relative;
+}
+#popup h3{margin-top:0;color:var(--accent);}
+#closePopup{position:absolute;top:10px;right:10px;background:none;border:none;font-size:18px;cursor:pointer;color:#555;}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Gwalior Women Helpline Portal</h1>
+  <p>Report Complaints • View Helpline Numbers • Locate Women Help Centers</p>
+</header>
+
+<main>
+  <!-- Left Panel -->
+  <section>
+    <div class="card">
+      <h2>Report a Complaint</h2>
+      <form id="complaintForm">
+        <label>Name</label>
+        <input type="text" id="name" required>
+        <label>Contact</label>
+        <input type="text" id="contact" required>
+        <label>Location (in Gwalior)</label>
+        <input type="text" id="location" required>
+        <label>Complaint Details</label>
+        <textarea id="details" rows="4" required></textarea>
+        <button type="submit">Submit Complaint</button>
+      </form>
+      <div id="result" style="display:none;margin-top:10px;color:green;"></div>
+    </div>
+
+    <div class="card">
+      <h3>Gwalior Helpline Numbers</h3>
+      <ul>
+        <li><b>Women Helpline:</b> <a href="tel:1090">1090</a></li>
+        <li><b>Police (Emergency):</b> <a href="tel:100">100</a></li>
+        <li><b>Child Helpline:</b> <a href="tel:1098">1098</a></li>
+        <li><b>CM Helpline:</b> <a href="tel:181">181</a></li>
+        <li><b>Ambulance:</b> <a href="tel:108">108</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Submitted Complaints (Local)</h3>
+      <div id="complaintList"></div>
+    </div>
+  </section>
+
+  <!-- Right Panel -->
+  <section>
+    <div class="card">
+      <h2>Help Centers Map</h2>
+      <div id="map"></div>
+      <p class="hint">Click on a center to view full details.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2025 Gwalior Women Helpline | Emergency: 1090 | Police: 100
+</footer>
+
+<!-- Popup overlay -->
+<div id="overlay">
+  <div id="popup">
+    <button id="closePopup">✕</button>
+    <h3 id="popupTitle"></h3>
+    <p id="popupAddress"></p>
+    <p id="popupDesc"></p>
+    <p><b>Contact:</b> <span id="popupPhone"></span></p>
+    <p><b>Working Hours:</b> <span id="popupHours"></span></p>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// ---------- Complaint Section ----------
+const form = document.getElementById('complaintForm');
+const result = document.getElementById('result');
+const list = document.getElementById('complaintList');
+
+function loadComplaints() {
+  const arr = JSON.parse(localStorage.getItem('gwlComplaints') || '[]');
+  list.innerHTML = arr.length ? '' : '<p>No complaints yet.</p>';
+  arr.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'complaint-card';
+    div.innerHTML = `<b>${c.name}</b> (${c.contact})
+      <button class="delete-btn" onclick="deleteComplaint(${i})">Delete</button><br>
+      <small>${c.location}</small><br>${c.details}<br>
+      <small>${new Date(c.time).toLocaleString()}</small>`;
+    list.appendChild(div);
+  });
+}
+
+function deleteComplaint(index){
+  const arr = JSON.parse(localStorage.getItem('gwlComplaints') || '[]');
+  arr.splice(index,1);
+  localStorage.setItem('gwlComplaints',JSON.stringify(arr));
+  loadComplaints();
+}
+
+form.addEventListener('submit', e=>{
+  e.preventDefault();
+  const obj = {
+    name: name.value,
+    contact: contact.value,
+    location: location.value,
+    details: details.value,
+    time: Date.now()
+  };
+  const arr = JSON.parse(localStorage.getItem('gwlComplaints') || '[]');
+  arr.unshift(obj);
+  localStorage.setItem('gwlComplaints', JSON.stringify(arr));
+  result.style.display='block';
+  result.textContent='✅ Complaint submitted successfully!';
+  form.reset();
+  loadComplaints();
+});
+
+loadComplaints();
+
+// ---------- Map Section ----------
+const map = L.map('map').setView([26.2183,78.1828], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19
+}).addTo(map);
+
+// All major Women Help Centers (example + accurate main offices)
+const centers = [
+  {
+    name:"District Women Helpline Office (1090)",
+    lat:26.2183, lng:78.1828,
+    address:"Collectorate Campus, Gwalior, Madhya Pradesh",
+    desc:"This center provides immediate help to women facing harassment, violence, or abuse. Offers counseling, shelter support, and police coordination.",
+    phone:"1090",
+    hours:"24x7"
+  },
+  {
+    name:"Mahila Thana (Women Police Station)",
+    lat:26.2245, lng:78.1785,
+    address:"Phalka Bazar, Lashkar, Gwalior, MP",
+    desc:"Dedicated women police station handling crimes against women, domestic violence, dowry cases, and harassment reports.",
+    phone:"0751-2445500",
+    hours:"24x7"
+  },
+  {
+    name:"One Stop Centre (Sakhi Center)",
+    lat:26.2162, lng:78.1797,
+    address:"Near JAH Hospital Campus, Lashkar, Gwalior",
+    desc:"Provides integrated support and assistance under one roof to women affected by violence. Offers medical, legal, and counseling services.",
+    phone:"0751-2323001",
+    hours:"24x7"
+  },
+  {
+    name:"Women Safety & Counseling Cell",
+    lat:26.2105, lng:78.1760,
+    address:"SP Office Campus, Gwalior",
+    desc:"A counseling cell working with the police to ensure safety and psychological support to women in distress.",
+    phone:"0751-2433200",
+    hours:"10am - 6pm"
+  },
+  {
+    name:"Women NGO Support Centre",
+    lat:26.2285, lng:78.1900,
+    address:"Kailash Nagar, Gwalior",
+    desc:"Non-government organization collaborating with government helplines to offer education, empowerment, and rehabilitation for women victims.",
+    phone:"0751-2400090",
+    hours:"9am - 5pm"
+  }
+];
+
+// Create markers
+centers.forEach(c=>{
+  const marker = L.marker([c.lat, c.lng]).addTo(map);
+  marker.bindPopup(`<b>${c.name}</b><br><button onclick='showDetails(${JSON.stringify(c).replace(/"/g,"&quot;")})'>View Details</button>`);
+});
+
+// ---------- Popup / Description ----------
+const overlay = document.getElementById('overlay');
+const popup = document.getElementById('popup');
+const closePopup = document.getElementById('closePopup');
+const popupTitle=document.getElementById('popupTitle');
+const popupAddress=document.getElementById('popupAddress');
+const popupDesc=document.getElementById('popupDesc');
+const popupPhone=document.getElementById('popupPhone');
+const popupHours=document.getElementById('popupHours');
+
+function showDetails(center){
+  popupTitle.textContent=center.name;
+  popupAddress.textContent=center.address;
+  popupDesc.textContent=center.desc;
+  popupPhone.innerHTML=`<a href="tel:${center.phone}">${center.phone}</a>`;
+  popupHours.textContent=center.hours;
+  overlay.style.display='flex';
+}
+
+closePopup.addEventListener('click',()=>overlay.style.display='none');
+overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.style.display='none';});
+</script>
+</body>
+</html>

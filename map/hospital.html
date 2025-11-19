@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Details</title>
+    <!-- Add Bootstrap CSS for navbar (optional, if used in index.html) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe0b2 0%, #fff7ed 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 12px rgba(44,62,80,0.08);
+        }
+        .container {
+            max-width: 540px;
+            margin: 48px auto 32px auto;
+            background: #fff8f0;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
+            padding: 38px 32px;
+        }
+        h2 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #d35400;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            text-shadow: 0 2px 8px rgba(211,84,0,0.08);
+            text-align: center;
+        }
+        h3 {
+            color: #d35400;
+            font-weight: 700;
+            margin-top: 32px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        p {
+            font-size: 1.18rem;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        .yes { color: green; font-weight: bold; }
+        .no { color: red; font-weight: bold; }
+        button {
+            background: linear-gradient(90deg, #ffb347 0%, #ffcc80 100%);
+            color: #d35400;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.18rem;
+            font-weight: 700;
+            padding: 14px 38px;
+            margin-top: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(211,84,0,0.10);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button:hover {
+            background: #d35400;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(211,84,0,0.18);
+        }
+        @media (max-width: 900px) {
+            .container {
+                max-width: 98vw;
+                padding: 18px 8px;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            button {
+                font-size: 1rem;
+                padding: 10px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (copy from index.html or adjust as needed) -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../index.html" style="color:#d35400;font-weight:700;">Gwalior Vyapar Mela</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../events.html">Events</a></li>
+          <li><a href="../parking.html">Parking</a></li>
+          <li class="active"><a href="#">Hospital</a></li>
+          <li><a href="../complaints.html">Complaints</a></li>
+          <li><a href="../contact-us.html">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+        <h2>Hospital Details</h2>
+        <p><b>Name:</b> <span id="hospitalName"></span></p>
+        <p><b>Address:</b> <span id="hospitalAddress"></span></p>
+        <p><b>Contact Number:</b> <span id="hospitalContact"></span></p>
+        <p><b>Emergency Services Available:</b> <span id="emergencyServices"></span></p>
+        <p><b>Total Beds Available:</b> <span id="totalBeds"></span></p>
+        <p><b>ICU Beds Available:</b> <span id="icuBeds"></span></p>
+        <p><b>Doctor on Call:</b> <span id="doctorOnCall"></span></p>
+
+        <h3>🚑 Ambulance Details</h3>
+        <p><b>Available:</b> <span id="ambulanceAvailability"></span></p>
+        <p><b>Type:</b> <span id="ambulanceType"></span></p>
+        <p><b>ETA:</b> <span id="ambulanceETA"></span> mins</p>
+        <p><b>Driver Name:</b> <span id="ambulanceDriverName"></span></p>
+        <p><b>Driver Contact:</b> <span id="ambulanceDriver"></span></p>
+        <p><b>Ambulance Number:</b> <span id="ambulanceNumber"></span></p>
+
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        function getQueryParams() {
+            let params = new URLSearchParams(window.location.search);
+            return Object.fromEntries(params.entries());
+        }
+
+        let hospital = getQueryParams();
+        document.getElementById("hospitalName").textContent = hospital.name;
+        document.getElementById("hospitalAddress").textContent = hospital.address;
+        document.getElementById("hospitalContact").textContent = hospital.contact;
+        document.getElementById("emergencyServices").textContent = hospital.emergency;
+        document.getElementById("totalBeds").textContent = hospital.beds;
+        document.getElementById("icuBeds").textContent = hospital.icu;
+        document.getElementById("doctorOnCall").textContent = hospital.doctor;
+        document.getElementById("ambulanceAvailability").textContent = hospital.ambulance;
+        document.getElementById("ambulanceType").textContent = hospital.ambType;
+        document.getElementById("ambulanceETA").textContent = hospital.eta;
+        document.getElementById("ambulanceDriverName").textContent = hospital.driverName;
+        document.getElementById("ambulanceDriver").textContent = hospital.driver;
+        document.getElementById("ambulanceNumber").textContent = hospital.ambulanceNumber;
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "../index.html";
+            }
+        }
+    </script>
+</body>
+</html>

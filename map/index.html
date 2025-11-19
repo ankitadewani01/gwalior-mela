@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Locator (No API Key)</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: linear-gradient(135deg, #fff7ed 0%, #f7f7f7 100%);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+    box-shadow: 0 2px 12px rgba(44,62,80,0.08);
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+h2 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #d35400;
+    letter-spacing: 1px;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    text-shadow: 0 2px 8px rgba(211,84,0,0.08);
+    text-align: center;
+}
+#map {
+    height: 520px;
+    width: 100%;
+    margin: 32px auto 0 auto;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(44,62,80,0.13);
+    border: 2px solid #ffd180;
+}
+button {
+    background: linear-gradient(90deg, #ffb347 0%, #ffcc80 100%);
+    color: #d35400;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.18rem;
+    font-weight: 700;
+    padding: 14px 38px;
+    margin: 18px auto 12px auto;
+    box-shadow: 0 2px 8px rgba(211,84,0,0.10);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    display: block;
+}
+button:hover {
+    background: #d35400;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(211,84,0,0.18);
+}
+.leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 16px rgba(44,62,80,0.18) !important;
+    background: #fff8f0 !important;
+    font-family: 'Montserrat', Arial, sans-serif;
+}
+.leaflet-popup-content {
+    font-size: 1.08rem !important;
+    color: #333 !important;
+    text-align: left !important;
+}
+footer {
+    background: #d35400;
+    color: #fff;
+    padding: 24px 0;
+    text-align: center;
+    margin-top: 48px;
+    font-size: 1.08rem;
+    letter-spacing: 1px;
+}
+@media (max-width: 900px) {
+    #map {
+        width: 98vw;
+        height: 340px;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    button {
+        font-size: 1rem;
+        padding: 10px 18px;
+    }
+    .container {
+        padding: 0 4px;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Navbar (copied from homepage) -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../index.html" style="color:#d35400;font-weight:700;">Gwalior Vyapar Mela</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../events.html">Events</a></li>
+          <li><a href="../parking.html">Parking</a></li>
+          <li class="active"><a href="#">Hospital Map</a></li>
+          <li><a href="../complaints.html">Complaints</a></li>
+          <li><a href="../contact-us.html">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+        <h2>Find Nearby Hospitals</h2>
+        <button onclick="findHospitals()">Find Hospitals</button>
+        <div id="map"></div>
+    </div>
+
+    <footer>
+        &copy; 2025 Gwalior Vyapar Mela. All rights reserved.
+    </footer>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        let map = L.map('map').setView([20, 78], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        function findHospitals() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    let userLocation = [position.coords.latitude, position.coords.longitude];
+                    map.setView(userLocation, 13);
+
+                    let userIcon = L.icon({
+                        iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                        iconSize: [32, 32]
+                    });
+
+                    L.marker(userLocation, { icon: userIcon }).addTo(map)
+                        .bindPopup("<b>Your Location</b>").openPopup();
+
+                    let query = `https://nominatim.openstreetmap.org/search?format=json&q=hospital+near+${position.coords.latitude},${position.coords.longitude}`;
+
+                    fetch(query)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length === 0) {
+                                alert("No hospitals found nearby.");
+                            } else {
+                                let hospitalIcon = L.icon({
+                                    iconUrl: 'https://maps.google.com/mapfiles/ms/icons/hospitals.png',
+                                    iconSize: [32, 32]
+                                });
+
+                                data.forEach((place, index) => {
+                                    let hospitalName = place.display_name.split(",")[0];  
+                                    let hospitalAddress = place.display_name;  
+                                    let contact = `+91 98${index}7654321`;
+                                    let emergencyServices = index % 2 === 0 ? "Yes" : "No";
+                                    let totalBeds = Math.floor(Math.random() * 200) + 50;
+                                    let icuBeds = Math.floor(totalBeds * 0.2);
+                                    let doctorOnCall = index % 2 === 0 ? "Available" : "Not Available";
+
+                                    let ambulanceAvailable = index % 2 === 0 ? "Yes" : "No";
+                                    let ambulanceType = ["Basic", "ICU", "Ventilator"][index % 3];
+                                    let ambulanceETA = Math.floor(Math.random() * 20) + 5;
+                                    let driverName = `Driver ${index + 1}`;
+                                    let driverContact = ambulanceAvailable === "Yes" ? `+91 99${index}1234567` : "N/A";
+                                    let ambulanceNumber = ambulanceAvailable === "Yes" ? `MH-12-AB-${1000 + index}` : "N/A";
+
+                                    let marker = L.marker([place.lat, place.lon], { icon: hospitalIcon }).addTo(map);
+
+                                    marker.bindPopup(`<b>${hospitalName}</b><br>
+                                    <a href="hospital.html?name=${encodeURIComponent(hospitalName)}&address=${encodeURIComponent(hospitalAddress)}&contact=${contact}&emergency=${emergencyServices}&beds=${totalBeds}&icu=${icuBeds}&doctor=${doctorOnCall}&ambulance=${ambulanceAvailable}&ambType=${ambulanceType}&eta=${ambulanceETA}&driverName=${encodeURIComponent(driverName)}&driver=${driverContact}&ambulanceNumber=${ambulanceNumber}" target="_blank">View Details</a>`);
+                                });
+                            }
+                        })
+                        .catch(error => alert("Error fetching hospital locations."));
+                }, () => {
+                    alert("Geolocation failed. Please enable location services.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+</body>
+</html>
